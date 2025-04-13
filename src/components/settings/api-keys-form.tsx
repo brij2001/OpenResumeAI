@@ -27,44 +27,50 @@ interface AIModel {
 const LOCAL_STORAGE_KEY = 'resumelm-api-keys'
 const MODEL_STORAGE_KEY = 'resumelm-default-model'
 
-const PROVIDERS: { 
-  id: ServiceName; 
-  name: string; 
+const PROVIDERS: {
+  id: ServiceName;
+  name: string;
   apiLink: string;
   unstable: boolean
 }[] = [
-  { 
-    id: 'anthropic', 
-    name: 'Anthropic',
-    apiLink: 'https://console.anthropic.com/',
-    unstable: false
-  },
-  { 
-    id: 'openai', 
-    name: 'OpenAI',
-    apiLink: 'https://platform.openai.com/api-keys',
-    unstable: false
-  },
-  {
-    id: 'groq', 
-    name: 'Groq', 
-    apiLink: 'https://console.groq.com/keys',
-    unstable: false 
-  },
-  // Unstable providers
-  {
-    id: 'google',
-    name: 'Google',
-    apiLink: 'https://ai.google/get-started/products/',
-    unstable: true
-  },
-  { 
-    id: 'deepseek', 
-    name: 'DeepSeek', 
-    apiLink: 'https://platform.deepseek.com/api-keys',
-    unstable: true 
-  }
-]
+    {
+      id: 'anthropic',
+      name: 'Anthropic',
+      apiLink: 'https://console.anthropic.com/',
+      unstable: false
+    },
+    {
+      id: 'openai',
+      name: 'OpenAI',
+      apiLink: 'https://platform.openai.com/api-keys',
+      unstable: false
+    },
+    {
+      id: 'groq',
+      name: 'Groq',
+      apiLink: 'https://console.groq.com/keys',
+      unstable: false
+    },
+    {
+      id: 'akash',
+      name: 'Akash chat API',
+      apiLink: 'https://chatapi.akash.network/',
+      unstable: false
+    },
+    // Unstable providers
+    {
+      id: 'google',
+      name: 'Google',
+      apiLink: 'https://ai.google/get-started/products/',
+      unstable: true
+    },
+    {
+      id: 'deepseek',
+      name: 'DeepSeek',
+      apiLink: 'https://platform.deepseek.com/api-keys',
+      unstable: true
+    }
+  ]
 
 const AI_MODELS: AIModel[] = [
   // Stable models
@@ -75,7 +81,9 @@ const AI_MODELS: AIModel[] = [
   { id: 'llama-3.1-8b-instant', name: 'Llama 3.1 8B', provider: 'groq', unstable: false },
   { id: 'llama-3.3-70b-versatile', name: 'Llama 3.3 70B ', provider: 'groq', unstable: false },
   { id: 'gemma2-9b-it', name: 'Gemma 2 9B', provider: 'groq', unstable: false },
-  { id: 'meta-llama/llama-4-scout-17b-16e-instruct', name: 'Llama 4 Scout 17B', provider: 'groq', unstable: false },
+  { id: 'meta-llama/llama-4-scout-17b-16e-instruct', name: 'Llama 4 Scout 17B - groq', provider: 'groq', unstable: false },
+  { id: 'meta-llama/llama-4-maverick-17b-128e-instruct', name: 'Llama 4 Maverick 17B - groq', provider: 'groq', unstable: false },
+  { id: 'akash Meta-Llama-4-Maverick-17B-128E-Instruct-FP8', name: 'LLama 4 Maverick - akash', provider: 'akash', unstable: false },
 
   // Unstable models
   { id: 'gemini-2.0-flash', name: 'Gemini 2.0 Flash', provider: 'google', unstable: true },
@@ -201,10 +209,10 @@ export function ApiKeysForm({ isProPlan }: { isProPlan: boolean }) {
     const currentModel = AI_MODELS.find(m => m.id === defaultModel)
     if (currentModel?.provider === service) {
       // Find first available model that has API key
-      const firstAvailableModel = AI_MODELS.find(m => 
+      const firstAvailableModel = AI_MODELS.find(m =>
         apiKeys.some(k => k.service === m.provider && k.service !== service)
       )
-      
+
       if (firstAvailableModel) {
         setDefaultModel(firstAvailableModel.id)
         toast.info(`Switched to ${firstAvailableModel.name}`)
@@ -217,7 +225,7 @@ export function ApiKeysForm({ isProPlan }: { isProPlan: boolean }) {
     toast.success('API key removed successfully')
   }
 
-  const getExistingKey = (service: ServiceName) => 
+  const getExistingKey = (service: ServiceName) =>
     apiKeys.find(k => k.service === service)
 
   const handleModelChange = (modelId: string) => {
@@ -250,7 +258,7 @@ export function ApiKeysForm({ isProPlan }: { isProPlan: boolean }) {
     setTimeout(() => setCopiedKey(null), 1000)
   }
 
-  
+
 
   return (
     <div className="space-y-6">
@@ -268,8 +276,8 @@ export function ApiKeysForm({ isProPlan }: { isProPlan: boolean }) {
           </SelectTrigger>
           <SelectContent>
             {AI_MODELS.map((model) => (
-              <SelectItem 
-                key={model.id} 
+              <SelectItem
+                key={model.id}
                 value={model.id}
                 disabled={!isModelSelectable(model.id)}
                 className={cn(
@@ -326,7 +334,7 @@ export function ApiKeysForm({ isProPlan }: { isProPlan: boolean }) {
             const providerModels = AI_MODELS.filter(model => model.provider === provider.id)
 
             return (
-              <div 
+              <div
                 key={provider.id}
                 className={cn(
                   "p-4 rounded-lg bg-white/30 border transition-all hover:bg-white/40"
@@ -359,8 +367,8 @@ export function ApiKeysForm({ isProPlan }: { isProPlan: boolean }) {
                         onClick={() => handleCopyKey(provider.id, existingKey.key)}
                         className={cn(
                           "h-7 px-2 transition-colors",
-                          copiedKey === provider.id 
-                            ? "text-emerald-500 hover:text-emerald-600" 
+                          copiedKey === provider.id
+                            ? "text-emerald-500 hover:text-emerald-600"
                             : "text-muted-foreground hover:text-gray-900"
                         )}
                       >
@@ -417,14 +425,14 @@ export function ApiKeysForm({ isProPlan }: { isProPlan: boolean }) {
                       >
                         {isVisible ? <EyeOff className="h-3.5 w-3.5" /> : <Eye className="h-3.5 w-3.5" />}
                       </Button>
-                      <Button 
+                      <Button
                         className="bg-gradient-to-r from-teal-600 to-cyan-600 text-white hover:from-teal-700 hover:to-cyan-700 h-9 px-4 text-sm transition-colors"
                         onClick={() => handleUpdateKey(provider.id)}
                       >
                         Save
                       </Button>
                     </div>
-                    <a 
+                    <a
                       href={provider.apiLink}
                       target="_blank"
                       rel="noopener noreferrer"
@@ -457,7 +465,7 @@ export function ApiKeysForm({ isProPlan }: { isProPlan: boolean }) {
               const providerModels = AI_MODELS.filter(model => model.provider === provider.id)
 
               return (
-                <div 
+                <div
                   key={provider.id}
                   className={cn(
                     "p-4 rounded-lg bg-white/30 border transition-all hover:bg-white/40",
@@ -467,7 +475,7 @@ export function ApiKeysForm({ isProPlan }: { isProPlan: boolean }) {
                   <div className="absolute top-2 right-2 bg-amber-100 text-amber-800 px-2 py-1 rounded-full text-xs font-medium">
                     Unstable
                   </div>
-                  
+
                   <div className="flex items-center justify-between mb-2">
                     <div className="flex items-center gap-2">
                       <Label className="text-sm font-medium text-gray-800">{provider.name}</Label>
@@ -495,8 +503,8 @@ export function ApiKeysForm({ isProPlan }: { isProPlan: boolean }) {
                           onClick={() => handleCopyKey(provider.id, existingKey.key)}
                           className={cn(
                             "h-7 px-2 transition-colors",
-                            copiedKey === provider.id 
-                              ? "text-emerald-500 hover:text-emerald-600" 
+                            copiedKey === provider.id
+                              ? "text-emerald-500 hover:text-emerald-600"
                               : "text-muted-foreground hover:text-gray-900"
                           )}
                         >
@@ -553,14 +561,14 @@ export function ApiKeysForm({ isProPlan }: { isProPlan: boolean }) {
                         >
                           {isVisible ? <EyeOff className="h-3.5 w-3.5" /> : <Eye className="h-3.5 w-3.5" />}
                         </Button>
-                        <Button 
+                        <Button
                           className="bg-gradient-to-r from-teal-600 to-cyan-600 text-white hover:from-teal-700 hover:to-cyan-700 h-9 px-4 text-sm transition-colors"
                           onClick={() => handleUpdateKey(provider.id)}
                         >
                           Save
                         </Button>
                       </div>
-                      <a 
+                      <a
                         href={provider.apiLink}
                         target="_blank"
                         rel="noopener noreferrer"

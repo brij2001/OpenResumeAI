@@ -90,7 +90,6 @@ export async function formatJobListing(jobListing: string, config?: AIConfig) {
   const aiClient = isPro ? initializeAIClient(config, isPro, true) : initializeAIClient(config);
 // Check rate limit
   // await checkRateLimit(id);
-
 try {
     const { object } = await generateObject({
       model: aiClient as LanguageModelV1,

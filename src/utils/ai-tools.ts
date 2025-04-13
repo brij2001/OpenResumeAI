@@ -25,60 +25,67 @@ export function initializeAIClient(config?: AIConfig, isPro?: boolean, useThinki
 
 
   // Handle Pro subscription with environment variables
-  if (isPro && config) {
+  // if (isPro && config) {
 
   
-    const { model } = config;
+  //   const { model } = config;
 
-    // if (useThinking) {
-    //   return createOpenAI({ apiKey: process.env.OPENAI_API_KEY })('o1-mini');
-    // }
+  //   // if (useThinking) {
+  //   //   return createOpenAI({ apiKey: process.env.OPENAI_API_KEY })('o1-mini');
+  //   // }
     
-    if (model.startsWith('claude')) {
-      if (!process.env.ANTHROPIC_API_KEY) throw new Error('Anthropic API key not found');
-      return createAnthropic({ apiKey: process.env.ANTHROPIC_API_KEY,  })(model) as LanguageModelV1;
-    }
+  //   if (model.startsWith('claude')) {
+  //     if (!process.env.ANTHROPIC_API_KEY) throw new Error('Anthropic API key not found');
+  //     return createAnthropic({ apiKey: process.env.ANTHROPIC_API_KEY,  })(model) as LanguageModelV1;
+  //   }
 
-    if (model.startsWith('gemini')) {
-      if (!process.env.GEMINI_API_KEY) throw new Error('Google API key not found');
-      return createGoogleGenerativeAI ({ apiKey: process.env.GEMINI_API_KEY })(model) as LanguageModelV1;
-    }
+  //   if (model.startsWith('gemini')) {
+  //     if (!process.env.GEMINI_API_KEY) throw new Error('Google API key not found');
+  //     return createGoogleGenerativeAI ({ apiKey: process.env.GEMINI_API_KEY })(model) as LanguageModelV1;
+  //   }
 
-    if (model.startsWith('deepseek')) {
-      if (!process.env.DEEPSEEK_API_KEY) throw new Error('DeepSeek API key not found');
-      return createDeepSeek({ apiKey: process.env.DEEPSEEK_API_KEY })(model) as LanguageModelV1;
-    }
+  //   if (model.startsWith('deepseek')) {
+  //     if (!process.env.DEEPSEEK_API_KEY) throw new Error('DeepSeek API key not found');
+  //     return createDeepSeek({ apiKey: process.env.DEEPSEEK_API_KEY })(model) as LanguageModelV1;
+  //   }
 
-    if (model.startsWith('gemma')) {
-      if (!process.env.GROQ_API_KEY) throw new Error('Groq API key not found');
-      return createGroq({ apiKey: process.env.GROQ_API_KEY })(model) as LanguageModelV1;
-    }
-    // llama
-    if (model.startsWith('llama')) {
-      if (!process.env.GROQ_API_KEY) throw new Error('Groq API key not found');
-      return createGroq({ apiKey: process.env.GROQ_API_KEY })(model) as LanguageModelV1;
-    }
+  //   if (model.startsWith('gemma')) {
+  //     if (!process.env.GROQ_API_KEY) throw new Error('Groq API key not found');
+  //     return createGroq({ apiKey: process.env.GROQ_API_KEY })(model) as LanguageModelV1;
+  //   }
+  //   // llama
+  //   if (model.startsWith('llama')) {
+  //     if (!process.env.GROQ_API_KEY) throw new Error('Groq API key not found');
+  //     return createGroq({ apiKey: process.env.GROQ_API_KEY })(model) as LanguageModelV1;
+  //   }
 
-    if (model.startsWith('meta')) {
-      if (!process.env.GROQ_API_KEY) throw new Error('Groq API key not found');
-      return createGroq({ apiKey: process.env.GROQ_API_KEY })(model) as LanguageModelV1;
-    }
+  //   if (model.startsWith('meta')) {
+  //     if (!process.env.GROQ_API_KEY) throw new Error('Groq API key not found');
+  //     return createGroq({ apiKey: process.env.GROQ_API_KEY })(model) as LanguageModelV1;
+  //   }
+  //   if (model.startsWith('akash')) {
+  //     const akashKey = apiKeys.find(k => k.service === 'akash')?.key;
+  //     if (!akashKey) throw new Error('Akash API key not found');
+  //     const model_name = model.split(' ')[2]
+  //     console.log(model_name)
+  //     return createOpenAI({ apiKey: akashKey, baseURL: 'https://chatapi.akash.network/api/v1' })(model_name) as LanguageModelV1;
+  //   }
 
 
-    void useThinking;
-    // if (model.startsWith('deepseek')) {
-    //   if (!process.env.DEEPSEEK_API_KEY) throw new Error('DeepSeek API key not found');
-    //   return createDeepSeek({ apiKey: process.env.DEEPSEEK_API_KEY })(model);
-    // }
+  //   void useThinking;
+  //   // if (model.startsWith('deepseek')) {
+  //   //   if (!process.env.DEEPSEEK_API_KEY) throw new Error('DeepSeek API key not found');
+  //   //   return createDeepSeek({ apiKey: process.env.DEEPSEEK_API_KEY })(model);
+  //   // }
 
-    // Default to OpenAI for Pro
-    if (!process.env.OPENAI_API_KEY) throw new Error('OpenAI API key not found');
-    return createOpenAI({ 
-      apiKey: process.env.OPENAI_API_KEY,
-      compatibility: 'strict',
+  //   // Default to OpenAI for Pro
+  //   if (!process.env.OPENAI_API_KEY) throw new Error('OpenAI API key not found');
+  //   return createOpenAI({ 
+  //     apiKey: process.env.OPENAI_API_KEY,
+  //     compatibility: 'strict',
     
-    })('gpt-4o-mini');
-  }
+  //   })('gpt-4o-mini');
+  // }
 
   // Logic for all users (including non-pro)
   if (!config) {
@@ -109,6 +116,14 @@ export function initializeAIClient(config?: AIConfig, isPro?: boolean, useThinki
     const groqKey = apiKeys.find(k => k.service === 'groq')?.key;
     if (!groqKey) throw new Error('Groq API key not found');
     return createGroq({ apiKey: groqKey })(model) as LanguageModelV1;
+  }
+
+  if (model.startsWith('akash')) {
+    const akashKey = apiKeys.find(k => k.service === 'akash')?.key;
+    if (!akashKey) throw new Error('Akash API key not found');
+    const model_name = model.split(' ')[1]
+    console.log(model_name)
+    return createOpenAI({ apiKey: akashKey, baseURL: 'https://chatapi.akash.network/api/v1' })(model_name) as LanguageModelV1;
   }
   
   const openaiKey = apiKeys.find(k => k.service === 'openai')?.key;

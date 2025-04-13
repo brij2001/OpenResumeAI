@@ -51,7 +51,7 @@ export interface Job {
     required_qualifications?: string[] | null;
   };
   work_location: 'remote' | 'in_person' | 'hybrid' | null;
-  employment_type: 'full_time' | 'part_time' | 'co_op' | 'internship' | 'contract' | null;
+  employment_type: 'full_time' | 'part_time' | 'co_op' | 'internship' | 'contract' | 'temp_to_hire'| null;
   created_at: string;
   updated_at: string;
   is_active: boolean;
@@ -196,6 +196,7 @@ export type ServiceName =
   // | 'fireworks'
   // | 'deepinfra'
   | 'groq'
-  | 'deepseek';
+  | 'deepseek'
+  | 'akash';
 
 
