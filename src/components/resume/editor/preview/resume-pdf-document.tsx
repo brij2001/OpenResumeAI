@@ -1,10 +1,11 @@
 'use client';
 
 import { Resume } from "@/lib/types";
-import { Document as PDFDocument, Page as PDFPage, Text, View, StyleSheet, Link, Image } from '@react-pdf/renderer';
+import { Document as PDFDocument, Page as PDFPage, Text, View, StyleSheet, Link, Image, Font } from '@react-pdf/renderer';
 import { memo, useMemo, useCallback } from 'react';
 import type { ReactNode } from 'react';
 
+Font.register({ family: 'Ubuntu', src: 'https://fonts.gstatic.com/s/ubuntusansmono/v2/jVyi7mzgBHrR5yE7ZyRg0QRJMKI45g_SchUEkQgw3KTnva5SgKM.ttf', fontWeight:'bold'});
 // Base styles that don't depend on resume settings
 const baseStyles = {
   link: {
@@ -59,11 +60,11 @@ function useTextProcessor() {
 }
 
 // Memoized section components
-const HeaderSection = memo(function HeaderSection({ 
-  resume, 
-  styles 
-}: { 
-  resume: Resume; 
+const HeaderSection = memo(function HeaderSection({
+  resume,
+  styles
+}: {
+  resume: Resume;
   styles: ReturnType<typeof createResumeStyles>;
 }) {
   return (
@@ -122,15 +123,15 @@ const HeaderSection = memo(function HeaderSection({
   );
 });
 
-const SkillsSection = memo(function SkillsSection({ 
-  skills, 
-  styles 
-}: { 
-  skills: Resume['skills']; 
+const SkillsSection = memo(function SkillsSection({
+  skills,
+  styles
+}: {
+  skills: Resume['skills'];
   styles: ReturnType<typeof createResumeStyles>;
 }) {
   if (!skills?.length) return null;
-  
+
   return (
     <View style={styles.skillsSection}>
       <Text style={styles.sectionTitle}>Skills</Text>
@@ -146,11 +147,11 @@ const SkillsSection = memo(function SkillsSection({
   );
 });
 
-const ExperienceSection = memo(function ExperienceSection({ 
-  experiences, 
-  styles 
-}: { 
-  experiences: Resume['work_experience']; 
+const ExperienceSection = memo(function ExperienceSection({
+  experiences,
+  styles
+}: {
+  experiences: Resume['work_experience'];
   styles: ReturnType<typeof createResumeStyles>;
 }) {
   const processText = useTextProcessor();
@@ -184,11 +185,11 @@ const ExperienceSection = memo(function ExperienceSection({
   );
 });
 
-const ProjectsSection = memo(function ProjectsSection({ 
-  projects, 
-  styles 
-}: { 
-  projects: Resume['projects']; 
+const ProjectsSection = memo(function ProjectsSection({
+  projects,
+  styles
+}: {
+  projects: Resume['projects'];
   styles: ReturnType<typeof createResumeStyles>;
 }) {
   const processText = useTextProcessor();
@@ -227,7 +228,7 @@ const ProjectsSection = memo(function ProjectsSection({
               </Text>
             )}
           </View>
-          
+
           {project.description.map((bullet, bulletIndex) => (
             <View key={bulletIndex} style={styles.bulletPoint}>
               <Text style={styles.bulletDot}>•</Text>
@@ -244,15 +245,21 @@ const ProjectsSection = memo(function ProjectsSection({
   );
 });
 
-const EducationSection = memo(function EducationSection({ 
-  education, 
-  styles 
-}: { 
-  education: Resume['education']; 
+const EducationSection = memo(function EducationSection({
+  education,
+  styles
+}: {
+  education: Resume['education'];
   styles: ReturnType<typeof createResumeStyles>;
 }) {
   const processText = useTextProcessor();
   if (!education?.length) return null;
+
+  // Function to clean coursework text by removing markers
+  const cleanCourseworkText = (text: string) => {
+    return text.replace(/^Technical Coursework:\s*/i, '')
+              .replace(/\*\*/g, '');
+  };
 
   return (
     <View style={styles.educationSection}>
@@ -262,10 +269,22 @@ const EducationSection = memo(function EducationSection({
           <View style={styles.educationHeader}>
             <View>
               <Text style={styles.schoolName}>{processText(edu.school, true)}</Text>
-              <Text style={styles.degree}>{processText(`${edu.degree} ${edu.field}`)}</Text>
+              <View style={{ flexDirection: 'row', gap: 4 }}>
+                <Text style={styles.degree}>{processText(`${edu.degree} ${edu.field}`)}</Text>
+                {edu.gpa && <Text style={styles.degree}>{` • GPA: ${edu.gpa}`}</Text>}
+              </View>
             </View>
             <Text style={styles.dateRange}>{edu.date}</Text>
           </View>
+          
+          {edu.description && edu.description.length > 0 && (
+            <View >
+              <Text style={styles.educationCourses}>
+                Coursework: {edu.description.map(cleanCourseworkText).join(', ')}
+              </Text>
+            </View>
+          )}
+          
           {edu.achievements && edu.achievements.map((achievement, bulletIndex) => (
             <View key={bulletIndex} style={styles.bulletPoint}>
               <Text style={styles.bulletDot}>•</Text>
@@ -371,7 +390,7 @@ function createResumeStyles(settings: Resume['document_settings'] = {
       marginBottom: 4,
       color: '#111827',
       textTransform: 'uppercase',
-      borderBottom: '0.5pt solid #e5e7eb',
+      borderBottom: '0.5pt solidrgb(96, 100, 108)',
       paddingBottom: 0,
     },
     // Skills section
@@ -482,9 +501,9 @@ function createResumeStyles(settings: Resume['document_settings'] = {
       color: '#111827',
     },
     projectTechnologies: {
-      fontSize: document_font_size,
+      fontSize: document_font_size - 1,
       color: '#374151',
-      fontFamily: 'Helvetica-Bold',
+      fontFamily: 'Ubuntu',
       marginBottom: 0,
     },
     projectDescription: {
@@ -521,6 +540,14 @@ function createResumeStyles(settings: Resume['document_settings'] = {
       fontSize: document_font_size,
       color: '#111827',
     },
+    educationCourses: {
+      fontSize: document_font_size - 1,
+      color: '#374151',
+      fontFamily: 'Ubuntu',
+      marginTop: -5,
+      marginBottom: -1,
+      
+    },
     footer: {
       position: 'absolute',
       bottom: 20,
@@ -555,10 +582,10 @@ export const ResumePDFDocument = memo(function ResumePDFDocument({ resume }: Res
         <ExperienceSection experiences={resume.work_experience} styles={styles} />
         <ProjectsSection projects={resume.projects} styles={styles} />
         <EducationSection education={resume.education} styles={styles} />
-        
+
         {resume.document_settings?.show_ubc_footer && (
           <View style={styles.footer}>
-            <Image 
+            <Image
               src="/images/ubc-science-footer.png"
               style={styles.footerImage}
             />

@@ -27,8 +27,9 @@ export function ProfileEducationForm({ education, onChange }: ProfileEducationFo
       field: "",
       location: "",
       date: "",
-      gpa: undefined,
-      achievements: []
+      gpa: "",
+      achievements: [],
+      description: []
     }]);
   };
 
@@ -63,6 +64,7 @@ export function ProfileEducationForm({ education, onChange }: ProfileEducationFo
                 <div className="flex items-center gap-2 text-xs text-gray-500">
                   {edu.date && <span>{edu.date}</span>}
                   {edu.gpa && <span>GPA: {edu.gpa}</span>}
+                  {edu.description && edu.description.length > 0 && <span>Courses: {edu.description.length}</span>}
                 </div>
               </div>
             </AccordionTrigger>
@@ -188,6 +190,25 @@ export function ProfileEducationForm({ education, onChange }: ProfileEducationFo
                       e.target.value.split('\n').filter(Boolean)
                     )}
                     placeholder="• Dean's List 2020-2021&#10;• President of Computer Science Club&#10;• First Place in Hackathon 2022"
+                    className="min-h-[100px] bg-white/50 border-gray-200 rounded-md
+                      focus:border-indigo-500/40 focus:ring-1 focus:ring-indigo-500/20
+                      hover:border-indigo-500/30 hover:bg-white/60 transition-colors
+                      placeholder:text-gray-400 text-sm"
+                  />
+                </div>
+
+                {/* Coursework Description */}
+                <div className="space-y-1.5">
+                  <div className="flex justify-between items-baseline">
+                    <Label className="text-xs font-medium text-indigo-700">Coursework</Label>
+                    <span className="text-[9px] text-gray-500">One course per line</span>
+                  </div>
+                  <Textarea
+                    value={edu.description?.join('\n')}
+                    onChange={(e) => updateEducation(index, 'description', 
+                      e.target.value.split('\n').filter(Boolean)
+                    )}
+                    placeholder="Technical Coursework: Operating Systems&#10;**Data Structures and Algorithms**&#10;Computer Networks"
                     className="min-h-[100px] bg-white/50 border-gray-200 rounded-md
                       focus:border-indigo-500/40 focus:ring-1 focus:ring-indigo-500/20
                       hover:border-indigo-500/30 hover:bg-white/60 transition-colors

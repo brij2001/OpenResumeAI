@@ -40,8 +40,9 @@ export const EducationForm = memo(function EducationFormComponent({
       field: "",
       location: "",
       date: "",
-      gpa: undefined,
-      achievements: []
+      gpa: "",
+      achievements: [],
+      description: []
     }, ...education]);
   };
 
@@ -243,6 +244,32 @@ export const EducationForm = memo(function EducationFormComponent({
                 <div className="absolute -top-2 left-2 px-1 bg-white/80 text-[7px] sm:text-[9px] font-medium text-indigo-700">
                   GPA (OPTIONAL)
                 </div>
+              </div>
+
+              {/* Coursework Description */}
+              <div className="space-y-1.5">
+                <div className="flex justify-between items-baseline">
+                  <Label className="text-[10px] sm:text-xs font-medium text-indigo-700">Coursework</Label>
+                  <span className="text-[8px] sm:text-[10px] text-gray-500">One course per line</span>
+                </div>
+                <Tiptap
+                  content={(edu.description || []).join('\n')}
+                  onChange={(newContent) => updateEducation(index, 'description', 
+                    newContent.split('\n').filter(Boolean)
+                  )}
+                  editorProps={{
+                    attributes: {
+                      placeholder: "Technical Coursework: Operating Systems\n**Data Structures and Algorithms**\nComputer Networks"
+                    }
+                  }}
+                  className={cn(
+                    "min-h-[120px] bg-white/50 border-gray-200 rounded-lg",
+                    "focus:border-indigo-500/40 focus:ring-2 focus:ring-indigo-500/20",
+                    "hover:border-indigo-500/30 hover:bg-white/60 transition-colors",
+                    "placeholder:text-gray-400",
+                    "text-[10px] sm:text-xs"
+                  )}
+                />
               </div>
 
               {/* Achievements */}

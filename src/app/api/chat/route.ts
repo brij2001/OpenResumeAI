@@ -30,7 +30,7 @@ export async function POST(req: Request) {
     // Apply rate limiting only for Pro users
     if (isPro) {
       try {
-        await checkRateLimit(id);
+        // await checkRateLimit(id);
       } catch (error) {
         // Add type checking for error
         const message = error instanceof Error ? error.message : 'Rate limit exceeded';

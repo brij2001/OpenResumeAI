@@ -405,8 +405,10 @@ export async function generateResumeScore(
     const { object } = await generateObject({
       model: aiClient,
       schema: resumeScoreSchema,
+      system:`You are an AI assistant that specializes in scoring resumes. You are very strict when scoring resumes. You explain in detail the score you give to each section.
+      You will be given a resume.`,
       prompt: `
-      Generate a score for this resume: ${JSON.stringify(resume)}
+      Generate a score for this resume: ${JSON.stringify(resume)}.
       MUST include a 'miscellaneous' field with 2-3 metrics following this format:
       {
         "metricName": {
@@ -416,7 +418,7 @@ export async function generateResumeScore(
       }
       Example: 
       "keywordOptimization": {
-        "score": 85,
+        "score": int,
         "reason": "Good use of industry keywords but could add more variation"
       }
       `

@@ -34,9 +34,11 @@ export async function convertTextToResume(prompt: string, existingResume: Resume
         1. **Analysis & Selection:**
           - Analyze the full resume text that includes all user experiences, skills, projects, and education.
           - Identify the items that best match the target role: ${targetRole}.
+          - When analyzing projects, deduce the technologies from the description and add them to the technologies array.
           - Always include the education section:
             - If only one educational entry exists, include it.
             - If multiple entries exist, select the one(s) most relevant to the target role.
+            - If Technical courseword is present, add them to the description.
 
         2. **Formatting & Emphasis:**
           - Transform the resume into a JSON object following the schema, with sections such as basic information, professional experience, projects, skills, and education.

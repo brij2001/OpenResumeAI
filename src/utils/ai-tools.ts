@@ -53,6 +53,17 @@ export function initializeAIClient(config?: AIConfig, isPro?: boolean, useThinki
       if (!process.env.GROQ_API_KEY) throw new Error('Groq API key not found');
       return createGroq({ apiKey: process.env.GROQ_API_KEY })(model) as LanguageModelV1;
     }
+    // llama
+    if (model.startsWith('llama')) {
+      if (!process.env.GROQ_API_KEY) throw new Error('Groq API key not found');
+      return createGroq({ apiKey: process.env.GROQ_API_KEY })(model) as LanguageModelV1;
+    }
+
+    if (model.startsWith('meta')) {
+      if (!process.env.GROQ_API_KEY) throw new Error('Groq API key not found');
+      return createGroq({ apiKey: process.env.GROQ_API_KEY })(model) as LanguageModelV1;
+    }
+
 
     void useThinking;
     // if (model.startsWith('deepseek')) {

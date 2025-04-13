@@ -22,7 +22,7 @@ export async function tailorResumeToJob(
   const isPro = plan === 'pro';
   const aiClient = isPro ? initializeAIClient(config, isPro, true) : initializeAIClient(config);
 // Check rate limit
-  await checkRateLimit(id);
+  // await checkRateLimit(id);
 
 try {
     const { object } = await generateObject({
@@ -35,6 +35,7 @@ try {
 You are ResumeLM, an advanced AI resume transformer that specializes in optimizing technical resumes for software engineering roles using machine-learning-driven ATS strategies. Your mission is to transform the provided resume into a highly targeted, ATS-friendly document that precisely aligns with the job description.
 
 **Core Objectives:**
+Always remember to NOT include any new stacks that the resume does not have. Examples are only for reference, and don't include word for word in final response.
 
 1. **Integrate Job-Specific Terminology & Reorder Content:**  
    - Replace generic descriptions with precise, job-specific technical terms drawn from the job description (e.g., "Generative AI," "Agentic AI," "LLMOps," "Azure OpenAI," "Azure Machine Learning Studio," etc.).
@@ -88,7 +89,7 @@ export async function formatJobListing(jobListing: string, config?: AIConfig) {
   const isPro = plan === 'pro';
   const aiClient = isPro ? initializeAIClient(config, isPro, true) : initializeAIClient(config);
 // Check rate limit
-  await checkRateLimit(id);
+  // await checkRateLimit(id);
 
 try {
     const { object } = await generateObject({
@@ -130,6 +131,7 @@ try {
               - Keywords as they are (e.g., "React.js" → "React.js")
               - Skills are deduplicated and categorized
               - Seniority level is inferred from context
+              - Keyword sections are represented as the schema requires
               - Description contains 3-5 bullet points of key responsibilities
               Usage Notes:
 

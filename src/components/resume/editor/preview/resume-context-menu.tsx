@@ -62,6 +62,8 @@ export function ResumeContextMenu({ children, resume }: ResumeContextMenuProps) 
       edu.location ? `Location: ${edu.location}` : '',
       `Date: ${edu.date}`,
       edu.gpa ? `GPA: ${edu.gpa}` : '',
+      edu.description && edu.description.length > 0 ? 
+        `Coursework: ${edu.description.map(text => text.replace(/^Technical Coursework:\s*/i, '').replace(/\*\*/g, '')).join(', ')}` : '',
       ...(edu.achievements || []).map((achievement: string) => `• ${achievement}`),
     ];
     return lines.filter(Boolean).join('\n');

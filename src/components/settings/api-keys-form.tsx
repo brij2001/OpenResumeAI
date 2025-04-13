@@ -75,6 +75,7 @@ const AI_MODELS: AIModel[] = [
   { id: 'llama-3.1-8b-instant', name: 'Llama 3.1 8B', provider: 'groq', unstable: false },
   { id: 'llama-3.3-70b-versatile', name: 'Llama 3.3 70B ', provider: 'groq', unstable: false },
   { id: 'gemma2-9b-it', name: 'Gemma 2 9B', provider: 'groq', unstable: false },
+  { id: 'meta-llama/llama-4-scout-17b-16e-instruct', name: 'Llama 4 Scout 17B', provider: 'groq', unstable: false },
 
   // Unstable models
   { id: 'gemini-2.0-flash', name: 'Gemini 2.0 Flash', provider: 'google', unstable: true },

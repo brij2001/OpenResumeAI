@@ -158,7 +158,12 @@ export async function createEmptyJob(): Promise<Job> {
     description: null,
     location: null,
     salary_range: null,
-    keywords: [],
+    keywords: {
+      technical_skills: [],
+      soft_skills: [],
+      industry_knowledge: [],
+      required_qualifications: []
+    },
     work_location: null,
     employment_type: null,
     is_active: true
@@ -171,7 +176,7 @@ export async function createEmptyJob(): Promise<Job> {
     .single();
 
   if (error) {
-    console.error('Error creating job:', error);
+    console.error('Error creating job(2):', error);
     throw new Error('Failed to create job');
   }
 

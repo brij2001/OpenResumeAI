@@ -13,8 +13,9 @@ export interface Education {
   field: string;
   location?: string;
   date: string;
-  gpa?: number | string;
+  gpa: number | string;
   achievements?: string[];
+  description?: string[];
 }
 
 export interface Project {
@@ -43,7 +44,12 @@ export interface Job {
   description: string | null;
   location: string | null;
   salary_range: string | null;
-  keywords: string[];
+  keywords?: {
+    technical_skills?: string[] | null;
+    soft_skills?: string[] | null;
+    industry_knowledge?: string[] | null;
+    required_qualifications?: string[] | null;
+  };
   work_location: 'remote' | 'in_person' | 'hybrid' | null;
   employment_type: 'full_time' | 'part_time' | 'co_op' | 'internship' | 'contract' | null;
   created_at: string;

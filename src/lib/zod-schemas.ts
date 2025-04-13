@@ -25,8 +25,8 @@ export const projectSchema = z.object({
   description: z.array(z.string()).optional(),
   date: z.string().optional(),
   technologies: z.array(z.string()).optional(),
-  url: z.string().optional(),
-  github_url: z.string().optional(),
+  url: z.string().nullish(),
+  github_url: z.string().nullish(),
 });
 
 export const skillSchema = z.object({
@@ -44,8 +44,8 @@ export const textImportSchema = z.object({
   phone_number: z.string().optional(),
   location: z.string().optional(),
   website: z.string().optional(),
-  linkedin_url: z.string().optional(),
-  github_url: z.string().optional(),
+  linkedin_url: z.string().nullish(),
+  github_url: z.string().nullish(),
   
   // Resume Sections
   work_experience: z.array(z.object({
@@ -62,7 +62,7 @@ export const textImportSchema = z.object({
     field: z.string().optional(),
     date: z.string().optional(),
     description: z.array(z.string()).optional(),
-    gpa: z.string().optional(),
+    gpa: z.string(),
     location: z.string().optional(),
     achievements: z.array(z.string()).optional(),
   })).optional(),
@@ -74,9 +74,9 @@ export const textImportSchema = z.object({
     name: z.string(),
     description: z.array(z.string()),
     technologies: z.array(z.string()).optional(),
-    date: z.string().optional(),
-    url: z.string().optional(),
-    github_url: z.string().optional(),
+    date: z.string().nullish(),
+    url: z.string().nullish(),
+    github_url: z.string().nullish(),
   })).optional(),
 });
 
@@ -172,7 +172,13 @@ export const jobSchema = z.object({
   salary_range: z.string().nullable(),
   created_at: z.string().datetime(),
   updated_at: z.string().datetime(),
-  keywords: z.array(z.string()).default([]),
+  // keywords: z.array(z.string()).default([]),
+  keywords: z.object({
+    technical_skills: z.array(z.string()).optional(),
+    soft_skills: z.array(z.string()).optional(),
+    industry_knowledge: z.array(z.string()).optional(),
+    required_qualifications: z.array(z.string()).optional(),
+  }).optional(),
   work_location: z.enum(['remote', 'in_person', 'hybrid']).nullable(),
   employment_type: z.preprocess(
     (val) => val === null || val === '' ? 'full_time' : val,
@@ -188,7 +194,13 @@ export const simplifiedJobSchema = z.object({
     description: z.string().nullable().optional(),
     location: z.string().nullable().optional(),
     salary_range: z.string().nullable().optional(),
-    keywords: z.array(z.string()).default([]).optional(),
+    // keywords: z.array(z.string()).default([]).optional(),
+    keywords: z.object({
+      technical_skills: z.array(z.string()).optional(),
+      soft_skills: z.array(z.string()).optional(),
+      industry_knowledge: z.array(z.string()).optional(),
+      required_qualifications: z.array(z.string()).optional(),
+    }).optional(),
     work_location: z.preprocess(
       (val) => val === null || val === '' ? 'in_person' : val,
       z.enum(['remote', 'in_person', 'hybrid']).nullable().optional()
@@ -205,7 +217,7 @@ export const simplifiedResumeSchema = z.object({
     education: z.array(educationSchema).optional(),
     skills: z.array(skillSchema).optional(),
     projects: z.array(projectSchema).optional(),
-    target_role: z.string()
+    target_role: z.string().nullish()
   });
 
 // Add type inference helper
