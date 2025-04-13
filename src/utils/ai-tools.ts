@@ -80,7 +80,7 @@ export function initializeAIClient(config?: AIConfig, isPro?: boolean, useThinki
     })('gpt-4o-mini');
   }
 
-  // Existing logic for free users
+  // Logic for all users (including non-pro)
   if (!config) {
     return createOpenAI({ apiKey: '' })('no-model') as LanguageModelV1;
   }
@@ -105,7 +105,7 @@ export function initializeAIClient(config?: AIConfig, isPro?: boolean, useThinki
     return createDeepSeek({ apiKey: deepseekKey })(model) as LanguageModelV1;
   }
   
-  if (model.startsWith('gemma')) {
+  if (model.startsWith('gemma') || model.startsWith('llama') || model.startsWith('meta')) {
     const groqKey = apiKeys.find(k => k.service === 'groq')?.key;
     if (!groqKey) throw new Error('Groq API key not found');
     return createGroq({ apiKey: groqKey })(model) as LanguageModelV1;
