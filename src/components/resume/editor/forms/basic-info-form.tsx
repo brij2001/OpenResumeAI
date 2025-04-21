@@ -7,6 +7,7 @@ import { Mail, Phone, MapPin, Globe, Linkedin, Github, User, UserCircle2, Lucide
 import { Button } from "@/components/ui/button";
 import { useResumeContext } from '../resume-editor-context';
 import { memo, useCallback } from 'react';
+import { Basic } from "next/font/google";
 
 interface BasicInfoFormProps {
   profile: Profile;
@@ -132,7 +133,13 @@ export const BasicInfoForm = memo(function BasicInfoFormComponent({
                 placeholder="Last Name"
               />
             </div>
-
+            <BasicInfoField
+              field="summary"
+              value={resume.summary || ''}
+              label="summary"
+              icon={User}
+              placeholder="Summary"
+            />
             <BasicInfoField
               field="email"
               value={resume.email}

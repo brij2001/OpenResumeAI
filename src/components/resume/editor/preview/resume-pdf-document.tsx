@@ -5,7 +5,12 @@ import { Document as PDFDocument, Page as PDFPage, Text, View, StyleSheet, Link,
 import { memo, useMemo, useCallback } from 'react';
 import type { ReactNode } from 'react';
 
-Font.register({ family: 'Ubuntu', src: 'https://fonts.gstatic.com/s/ubuntusansmono/v2/jVyi7mzgBHrR5yE7ZyRg0QRJMKI45g_SchUEkQgw3KTnva5SgKM.ttf', fontWeight:'bold'});
+Font.register({ family: 'Ubuntu', src: 'https://fonts.gstatic.com/s/ubuntusansmono/v2/jVyi7mzgBHrR5yE7ZyRg0QRJMKI45g_SchUEkQgw3KTnva5SgKM.ttf'});
+Font.register({
+  family: 'Ubuntu',
+  src: 'https://fonts.gstatic.com/s/ubuntusansmono/v2/jVyi7mzgBHrR5yE7ZyRg0QRJMKI45g_SchUEkQgw3KTnvXBVgKM.ttf',
+  fontWeight: 'bold',
+});
 // Base styles that don't depend on resume settings
 const baseStyles = {
   link: {
@@ -119,6 +124,24 @@ const HeaderSection = memo(function HeaderSection({
           </Link>
         )}
       </View>
+    </View>
+  );
+});
+
+const SummarySection = memo(function SummarySection({
+  summary,
+  styles
+}: {
+  summary: Resume['summary'];
+  styles: ReturnType<typeof createResumeStyles>;
+}) {
+  const processText = useTextProcessor();
+  if (!summary) return null;
+
+  return (
+    <View style={styles.summarySection}>
+      <Text style={styles.sectionTitle}>Summary</Text>
+      <Text style={styles.summarySection}>{processText(summary)}</Text>
     </View>
   );
 });
@@ -258,7 +281,7 @@ const EducationSection = memo(function EducationSection({
   // Function to clean coursework text by removing markers
   const cleanCourseworkText = (text: string) => {
     return text.replace(/^Technical Coursework:\s*/i, '')
-              .replace(/\*\*/g, '');
+      .replace(/\*\*/g, '');
   };
 
   return (
@@ -276,7 +299,7 @@ const EducationSection = memo(function EducationSection({
             </View>
             <Text style={styles.dateRange}>{edu.date}</Text>
           </View>
-          
+
           {edu.description && edu.description.length > 0 && (
             <View >
               <Text style={styles.educationCourses}>
@@ -284,7 +307,7 @@ const EducationSection = memo(function EducationSection({
               </Text>
             </View>
           )}
-          
+
           {edu.achievements && edu.achievements.map((achievement, bulletIndex) => (
             <View key={bulletIndex} style={styles.bulletPoint}>
               <Text style={styles.bulletDot}>•</Text>
@@ -306,6 +329,10 @@ function createResumeStyles(settings: Resume['document_settings'] = {
   document_margin_vertical: 36,
   document_margin_horizontal: 36,
   header_name_size: 24,
+  summary_item_spacing: 2,
+  summary_margin_top: 2,
+  summary_margin_bottom: 2,
+  summary_margin_horizontal: 0,
   header_name_bottom_spacing: 24,
   skills_margin_top: 2,
   skills_margin_bottom: 2,
@@ -332,6 +359,10 @@ function createResumeStyles(settings: Resume['document_settings'] = {
     document_margin_horizontal = 36,
     header_name_size = 24,
     header_name_bottom_spacing = 24,
+    summary_item_spacing = 2,
+    summary_margin_top = 2,
+    summary_margin_bottom = 2,
+    summary_margin_horizontal = 0,
     skills_margin_top = 2,
     skills_margin_bottom = 2,
     skills_margin_horizontal = 0,
@@ -393,6 +424,13 @@ function createResumeStyles(settings: Resume['document_settings'] = {
       borderBottom: '0.5pt solidrgb(96, 100, 108)',
       paddingBottom: 0,
     },
+    // Summary section
+    summarySection: {
+      marginTop: summary_margin_top,
+      marginBottom: summary_margin_bottom,
+      marginLeft: summary_margin_horizontal,
+      marginRight: summary_margin_horizontal,
+    },
     // Skills section
     skillsSection: {
       marginTop: skills_margin_top,
@@ -419,7 +457,7 @@ function createResumeStyles(settings: Resume['document_settings'] = {
     },
     skillItem: {
       fontSize: document_font_size,
-      color: '#374151',
+      color: '#111827',
       flexGrow: 1,
       flexBasis: 0,
       flexWrap: 'wrap',
@@ -504,6 +542,7 @@ function createResumeStyles(settings: Resume['document_settings'] = {
       fontSize: document_font_size - 1,
       color: '#374151',
       fontFamily: 'Ubuntu',
+      fontWeight: 'bold',
       marginBottom: 0,
     },
     projectDescription: {
@@ -546,7 +585,8 @@ function createResumeStyles(settings: Resume['document_settings'] = {
       fontFamily: 'Ubuntu',
       marginTop: -5,
       marginBottom: -1,
-      
+      fontWeight: 'bold',
+
     },
     footer: {
       position: 'absolute',
@@ -578,6 +618,7 @@ export const ResumePDFDocument = memo(function ResumePDFDocument({ resume }: Res
     <PDFDocument>
       <PDFPage size="LETTER" style={styles.page}>
         <HeaderSection resume={resume} styles={styles} />
+        <SummarySection summary={resume.summary} styles={styles} />
         <SkillsSection skills={resume.skills} styles={styles} />
         <ExperienceSection experiences={resume.work_experience} styles={styles} />
         <ProjectsSection projects={resume.projects} styles={styles} />

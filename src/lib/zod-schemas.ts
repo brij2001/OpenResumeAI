@@ -137,6 +137,7 @@ export const resumeSchema = z.object({
   website: z.string().url().optional(),
   linkedin_url: z.string().url().optional(),
   github_url: z.string().url().optional(),
+  summary: z.string().optional(),
   work_experience: z.array(workExperienceSchema).optional(),
   education: z.array(educationSchema).optional(),
   skills: z.array(skillSchema).optional(),

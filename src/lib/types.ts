@@ -13,7 +13,7 @@ export interface Education {
   field: string;
   location?: string;
   date: string;
-  gpa: number | string;
+  gpa: number | string | undefined;
   achievements?: string[];
   description?: string[];
 }
@@ -72,6 +72,7 @@ export interface Resume {
   is_base_resume: boolean;
   first_name: string;
   last_name: string;
+  summary?: string;
   email: string;
   phone_number?: string;
   location?: string;
@@ -104,6 +105,12 @@ export interface DocumentSettings {
   header_name_size: number;
   header_name_bottom_spacing: number;
 
+  //Summary Section
+  summary_margin_top: number;
+  summary_margin_bottom: number;
+  summary_margin_horizontal: number;
+  summary_item_spacing: number;
+  
   // Skills Section
   skills_margin_top: number;
   skills_margin_bottom: number;

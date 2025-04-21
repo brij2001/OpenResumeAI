@@ -96,7 +96,8 @@ export function ResumeContextMenu({ children, resume }: ResumeContextMenuProps) 
       if (resume.linkedin_url) sections.push(`LinkedIn: ${resume.linkedin_url}`);
       if (resume.github_url) sections.push(`GitHub: ${resume.github_url}`);
       sections.push('\n');
-
+      if(resume.summary) sections.push(resume.summary);
+      sections.push('\n');
       // Skills
       if (resume.skills.length > 0) {
         sections.push('SKILLS');
